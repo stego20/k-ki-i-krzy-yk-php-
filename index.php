@@ -88,11 +88,15 @@ function sprawdz(){
                     echo "<button name='xy' value='".$i."".$j."'></button>";
                 }
                 if($_SESSION['tabela'][$i-1][$j-1]==1){
-                    echo '<button class="jeden" name="xy" value="00"></button>';
+                    echo '<button class="jeden" name="xy" value="00"><svg height="180" width="180">
+                    <line x1="10" y1="10" x2="170" y2="170" style="stroke:white;stroke-width:15" />
+                    <line x1="10" y1="170" x2="170" y2="10" style="stroke:white;stroke-width:15" /></svg></button>';
                     $ile++;
                 }
                 if($_SESSION['tabela'][$i-1][$j-1]==2){
-                    echo '<button class="dwa" name="xy" value="00"></button>';
+                    echo '<button class="dwa" name="xy" value="00">
+                    <svg height="180" width="180">
+                        <circle r="60" cx="90" cy="90" fill="black" stroke="white" stroke-width="15" /></svg></button>';
                     $ile++;
                 }
                }
