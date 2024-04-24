@@ -1,11 +1,11 @@
 <?php
 include_once "zmienne.php";
 
-function sprawdz(){
+function sprawdz($zwaracnie){ // sprawdzanie wygranej
     $win=0;
     $tabela=$_SESSION['tabela'];
     for ($i=0; $i < 3; $i++) { 
-        //w lini
+        //w wierszach
         if ($tabela[$i][0]==1 && $tabela[$i][1]==1 &&$tabela[$i][2]==1 ){
             $win=1;
             break;
@@ -41,16 +41,24 @@ function sprawdz(){
             break;
         }
     }
-    if($win==1){
+    if($zwaracnie){ // zwraca informacje o wygranej
+        if($win==1){
         echo '<h3>wygrał 1</h3>';
-        $_SESSION['tabela']=[[0,0,0],[0,0,0],[0,0,0]];
         return true;
     }
     elseif($win==2){
         echo '<h3>wygrał 2</h3>';
-        $_SESSION['tabela']=[[0,0,0],[0,0,0],[0,0,0]];
         return true;
     }
+    }else{
+        if($win==1){ // zwraca wartosc czy gra sie skonczyła
+            return true;
+        }
+        elseif($win==2){
+            return true;
+        }
+    }
+    
     
 }
 ?>
@@ -63,8 +71,10 @@ function sprawdz(){
     <link rel="stylesheet" href="style.css">
 </head>
 <body><section class='interfejs'>
-    <div><?php echo "<h1>Ruch gracza: ".$_SESSION['gracz']."</h1>";
-        sprawdz();
+    <div><?php if (!sprawdz(false)){ echo "<h1>Ruch gracza: ".$_SESSION['gracz']."</h1>";}else{
+        echo "<h1 class='koniec'>Kliknij na plansze aby zacząć jeszcze raz, <strong>rozpoczyna przegrany</strong></h1>";
+    }
+        sprawdz(true);
         $ile=0;
         for ($i=0; $i < 3; $i++) { 
             for ($j=0; $j < 3; $j++) { 
@@ -73,7 +83,7 @@ function sprawdz(){
                 }
             }
         }
-        if ($ile==9){
+        if ($ile==9 && !sprawdz(false)){
             echo '<h3>Remis </h3>';
         }
     ?></div>
@@ -84,7 +94,8 @@ function sprawdz(){
             for ($i=1; $i < 4; $i++) { 
                 echo "<p>";
                for ($j=1; $j < 4; $j++) { 
-                if($_SESSION['tabela'][$i-1][$j-1]==0){
+                if(!sprawdz(false)){
+                     if($_SESSION['tabela'][$i-1][$j-1]==0){
                     echo "<button name='xy' value='".$i."".$j."'></button>";
                 }
                 if($_SESSION['tabela'][$i-1][$j-1]==1){
@@ -99,15 +110,38 @@ function sprawdz(){
                         <circle r="60" cx="90" cy="90" fill="black" stroke="white" stroke-width="15" /></svg></button>';
                     $ile++;
                 }
+                }else{
+                    if($_SESSION['tabela'][$i-1][$j-1]==0){
+                        echo "<button name='xy' value='00'></button>";
+                    }
+                    if($_SESSION['tabela'][$i-1][$j-1]==1){
+                        echo '<button class="jeden" name="xy" value="00"><svg height="180" width="180">
+                        <line x1="10" y1="10" x2="170" y2="170" style="stroke:white;stroke-width:15" />
+                        <line x1="10" y1="170" x2="170" y2="10" style="stroke:white;stroke-width:15" /></svg></button>';
+                        $ile++;
+                    }
+                    if($_SESSION['tabela'][$i-1][$j-1]==2){
+                        echo '<button class="dwa" name="xy" value="00">
+                        <svg height="180" width="180">
+                            <circle r="60" cx="90" cy="90" fill="black" stroke="white" stroke-width="15" /></svg></button>';
+                        $ile++;
+                    }
+                }
+               
                }
                echo "</p>";
                
-               if($ile==9 ){
+               if($ile==9 ){ // sprawdza czy cała plansza jest zajeta, jezeli tak to czysci po nastepnymn kliknieciu
       
                 $_SESSION['tabela']=[[0,0,0],[0,0,0],[0,0,0]];
 
                }
             }
+            if(sprawdz(false)){// sprawdza czy którysz z graczy wygrał, jezeli tak to czysci po nastepnymn kliknieciu
+      
+                $_SESSION['tabela']=[[0,0,0],[0,0,0],[0,0,0]];
+
+               }
         ?>
     </form></section>
 
